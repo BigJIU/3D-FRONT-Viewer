@@ -1,28 +1,30 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using NewFrontData;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class RandomManager : MonoBehaviour
 {
     public int testNum;
     public int aiNum;
     private int nowNum = 0;
-
-    public Transform Canvas;
+    
     public SceneImporter si;
+    public bool guessOn;
 
     private Transform debugWindow;
-    public Toggle human;
-    public Toggle AI;
+    public GameObject generateContent;
 
     private List<string> humanList;
     private List<string> aiList;
     
-    string humanPath = $@"D:\3D-Front\json\";
-    string aiPath = $@"D:\3D-Front\aijson\";
+    string humanPath = $@"{Config.sourcePath}json\";
+    string aiPath = $@"{Config.sourcePath}aijson\";
     
     private List<string> jsonNameList;
     private List<int> resultList;
@@ -34,10 +36,9 @@ public class RandomManager : MonoBehaviour
     {
         humanList = getFlieList(humanPath);
         aiList = getFlieList(aiPath);
-            
         
+        generateContent.SetActive(!guessOn);
         reset();
-        
         Debug.Log("Reset Over");
     }
 
@@ -61,7 +62,8 @@ public class RandomManager : MonoBehaviour
             }
             
         }
-        
+
+        jsonNameList = Outoforder(jsonNameList);
         si.Generate(getJson(nowNum++));
         SceneBuilder.NewRoomBuild(si.data,si.avaRoom[0],true);
 
@@ -112,7 +114,7 @@ public class RandomManager : MonoBehaviour
         string type = jsonNameList[index].Split('^')[0];
         string dic = (type == "h") ? "json" : "aijson";
         Debug.Log("generating "+ type);
-        string path = $@"D:\3D-Front\{dic}\{jsonNameList[index].Split('^')[1]}";
+        string path = $@"{Config.sourcePath}{dic}\{jsonNameList[index].Split('^')[1]}";
         return File.ReadAllText(path);;
     }
     
@@ -156,11 +158,7 @@ public class RandomManager : MonoBehaviour
 
     private void evaluateOver()
     {
-        for (int i = 0; i < testNum; i++)
-        {
-            string guess = resultList[i] == 0 ? "h" : "a";
-            Debug.Log($"Test{i}: Type: {jsonNameList[i].Split('^')[0]} Guess:{guess}");
-        }
+        writeLog();
     }
     
     public List<T> Outoforder<T>(List<T> bag)
@@ -178,6 +176,42 @@ public class RandomManager : MonoBehaviour
             }
         }
         return bag;
+    }
+
+    private void writeLog()
+    {
+        string path = $"{Config.logPath}/{(System.DateTime.Now.Hour*10000 + System.DateTime.Now.Minute*100 + System.DateTime.Now.Second)}.txt";
+
+        StringBuilder line1 = new StringBuilder();
+        StringBuilder line2 = new StringBuilder();
+        StringBuilder line3 = new StringBuilder();
+
+        line1.Append("Index\t");
+        line2.Append("Should\t");
+        line3.Append("Guess\t");
+        
+        for (int i = 0; i < testNum; i++)
+        {
+            string index = $"{i}";
+            string guess = resultList[i] == 0 ? "Human": 
+                                                "AI   ";
+            string should = jsonNameList[i].Split('^')[0] == "h"?
+                                                "Human": 
+                                                "AI   ";
+            line1.Append(index).Append("\t||");
+            line2.Append(should).Append("\t||");
+            line3.Append(guess).Append("\t||");
+
+        }
+
+        string content = line1.Append("\n").ToString() + line2.Append("\n").ToString() + line3.Append("\n").ToString();
+        using (StreamWriter sr = new StreamWriter(path))
+        {
+            sr.WriteLine(content);
+            sr.Close();
+            sr.Dispose();
+            Debug.Log(content);
+        }
     }
     
 }

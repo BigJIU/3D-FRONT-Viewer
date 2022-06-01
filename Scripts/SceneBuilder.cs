@@ -114,7 +114,6 @@ namespace NewFrontData
         {
             Debug.Log("Building wall and floor");
             string wallPath = $"{Config.HomePath}{houseId}\\{node.modelId}w.obj";
-            //D:\3D-Front\room\room\0adb88db-02a3-43ca-9a69-76dcf25740d6/fr_0rm0f.obj
             string floorPath = $"{Config.HomePath}{houseId}\\{node.modelId}f.obj";
             string wallMtl = $"{Application.dataPath}\\wall.mtl";
             string floorlMtl = $"{Application.dataPath}\\floor.mtl";

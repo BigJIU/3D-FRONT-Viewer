@@ -11,6 +11,10 @@ public static class Config
     public static readonly string ObjectPath = @"D:\3D-Front\object\object\";
     public static readonly string HomePath = @"D:\3D-Front\room\room\";
 
+    public static readonly string sourcePath = @"D:\3D-Front\";
+
+    public static readonly string logPath = @"D:\3D-Front\Logs";
+
     public static Texture2D wallTexture;
     public static Texture2D floorTexture;
 
