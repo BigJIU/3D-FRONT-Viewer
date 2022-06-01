@@ -103,6 +103,26 @@ namespace Dummiesman {
 			return new Vector3(x, y, z);
 		}
 
+		public Vector3 ReadVector(float[,] t)
+		{
+			if (t == null)
+			{
+				return ReadVector();
+			}
+			this.SkipWhitespaces();
+			float x = this.ReadFloat();
+			this.SkipWhitespaces();
+			float y = this.ReadFloat();
+			this.SkipWhitespaces(out var newLinePassed);
+			float z = 0f;
+			if (newLinePassed == false) {
+				z = this.ReadFloat();
+			}
+			Vector3 output = new Vector3((x*t[0,0]+y*t[0,1]+z*t[0,2]+t[0,3]),(x*t[1,0]+y*t[1,1]+z*t[1,2]+t[1,3]),(x*t[2,0]+y*t[2,1]+z*t[2,2]+t[2,3]));
+			// output = new Vector3(x,y,z);
+			return output;
+		}
+
 		public int ReadInt() {
 			int result = 0;
 			bool isNegative = this.currentChar == '-';
@@ -130,11 +150,12 @@ namespace Dummiesman {
 				this.MoveNext();
 				num +=  this.ReadFloatEnd();
 
-				if (this.currentChar == 'e' || this.currentChar == 'E') {
-					this.MoveNext();
-					var exp = this.ReadInt();
-					num = num * Mathf.Pow(10f, exp);
-				}
+				
+			}
+			if (this.currentChar == 'e' || this.currentChar == 'E') {
+				this.MoveNext();
+				var exp = this.ReadInt();
+				num = num * Mathf.Pow(10f, exp);
 			}
 			if (isNegative == true) {
 				num = -num;

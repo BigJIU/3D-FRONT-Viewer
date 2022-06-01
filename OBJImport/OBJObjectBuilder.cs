@@ -102,6 +102,22 @@ public class OBJObjectBuilder {
 
 		//set vertex data
 		msh.SetVertices(_vertices);
+		//Test Area
+		float ymax = 0;
+		for (int vi = 0; vi < _vertices.Count; vi++)
+		{
+			if (_vertices[vi].y>ymax)
+			{
+				ymax = _vertices[vi].y;
+				// Debug.Log(ymax);
+			}
+		}
+		// Debug.Log("----------------------------------------");
+		// Debug.Log("----------------------------------------");
+		// Debug.Log("----------------------------------------");
+		// Debug.Log(ymax);
+		
+		//Area End
 		msh.SetNormals(_normals);
 		msh.SetUVs(0, _uvs);
 

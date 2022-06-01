@@ -157,7 +157,7 @@ public class MTLLoader {
             {
                 string materialName = processedLine.Substring(7);
 
-                var newMtl = new Material(Shader.Find("Standard (Specular setup)")) { name = materialName };
+                var newMtl = new Material(Shader.Find("Unlit/Texture")) { name = materialName };
                 mtlDict[materialName] = newMtl;
                 currentMaterial = newMtl;
 
@@ -171,10 +171,11 @@ public class MTLLoader {
             //diffuse color
             if (splitLine[0] == "Kd" || splitLine[0] == "kd")
             {
-                var currentColor = currentMaterial.GetColor("_Color");
-                var kdColor = OBJLoaderHelper.ColorFromStrArray(splitLine);
+                //FIXME: IGNORE FOR NO BUG
+                //var currentColor = currentMaterial.GetColor("_Color");
+                //var kdColor = OBJLoaderHelper.ColorFromStrArray(splitLine);
 
-                currentMaterial.SetColor("_Color", new Color(kdColor.r, kdColor.g, kdColor.b, currentColor.a));
+                //currentMaterial.SetColor("_Color", new Color(kdColor.r, kdColor.g, kdColor.b, currentColor.a));
                 continue;
             }
 
@@ -187,7 +188,19 @@ public class MTLLoader {
                     continue; //invalid args or sth
                 }
 
-                var KdTexture = TryLoadTexture(texturePath);
+                Texture2D KdTexture;
+                if (texturePath == "wallTexture")
+                {
+                    KdTexture = Config.wallTexture;
+                }else if(texturePath == "floorTexture")
+                {
+                    KdTexture = Config.floorTexture;
+                }
+                else
+                {
+                    KdTexture = TryLoadTexture(texturePath);
+                }
+                
                 currentMaterial.SetTexture("_MainTex", KdTexture);
 
                 //set transparent mode if the texture has transparency
@@ -245,12 +258,21 @@ public class MTLLoader {
             if (splitLine[0] == "map_Ka" || splitLine[0] == "map_ka")
             {
                 string texturePath = GetTexPathFromMapStatement(processedLine, splitLine);
-                if(texturePath == null)
+                //Debug.Log("mtl address:"+texturePath);
+                Texture2D KdTexture;
+                if (texturePath == "wallTexture")
                 {
-                    continue; //invalid args or sth
+                    KdTexture = Config.wallTexture;
+                }else if(texturePath == "floorTexture")
+                {
+                    KdTexture = Config.floorTexture;
+                }
+                else
+                {
+                    KdTexture = TryLoadTexture(texturePath);
                 }
 
-                currentMaterial.SetTexture("_EmissionMap", TryLoadTexture(texturePath));
+                currentMaterial.SetTexture("_EmissionMap", KdTexture);
                 continue;
             }
 

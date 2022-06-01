@@ -29,6 +29,22 @@ public static class Utils
         realSize = new Vector3(meshSize.x*scale.x, meshSize.y*scale.y, meshSize.z*scale.z);  
           
         return realSize;  
-    }  
+    }
+
+    public static float[,] To44(this float[] arrs)
+    {
+        return new float[4, 4]
+        {
+            { arrs[0],arrs[4],arrs[8],arrs[12]}, 
+            { arrs[1],arrs[5],arrs[9],arrs[13]}, 
+            { arrs[2],arrs[6],arrs[10],arrs[14]}, 
+            { arrs[3],arrs[7],arrs[11],arrs[15]}
+        };
+    }
+
+    public static void EditFloorFormat(string path)
+    {
+        System.IO.File.AppendAllText(path,"\r\n");
+    }
 
 }

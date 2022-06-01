@@ -99,6 +99,10 @@ namespace Dummiesman
         /// <returns>Returns a GameObject represeting the OBJ file, with each imported object as a child.</returns>
         public GameObject Load(Stream input)
         {
+            return Load(input, (float[,])null);
+        }
+        public GameObject Load(Stream input,float[,] transform)
+        {
             var reader = new StreamReader(input);
             //var reader = new StringReader(inputReader.ReadToEnd());
 
@@ -155,7 +159,7 @@ namespace Dummiesman
 				}
 				
 				if (buffer.Is("v")) {
-					Vertices.Add(buffer.ReadVector());
+					Vertices.Add(buffer.ReadVector(transform));
 					continue;
 				}
 
@@ -201,7 +205,7 @@ namespace Dummiesman
                     {
 						bool newLinePassed;
 						buffer.SkipWhitespaces(out newLinePassed);
-						if (newLinePassed == true) {
+						if (newLinePassed == true||buffer.endReached) {
 							break;
 						}
 
@@ -298,7 +302,7 @@ namespace Dummiesman
         /// <param name="path">Input OBJ path</param>
         /// /// <param name="mtlPath">Input MTL path</param>
         /// <returns>Returns a GameObject represeting the OBJ file, with each imported object as a child.</returns>
-        public GameObject Load(string path, string mtlPath)
+        public GameObject Load(string path, string mtlPath,float[,] trans)
         {
             _objInfo = new FileInfo(path);
             if (!string.IsNullOrEmpty(mtlPath) && File.Exists(mtlPath))
@@ -308,14 +312,14 @@ namespace Dummiesman
 
                 using (var fs = new FileStream(path, FileMode.Open))
                 {
-                    return Load(fs);
+                    return Load(fs,trans);
                 }
             }
             else
             {
                 using (var fs = new FileStream(path, FileMode.Open))
                 {
-                    return Load(fs);
+                    return Load(fs,trans);
                 }
             }
         }
@@ -327,7 +331,7 @@ namespace Dummiesman
         /// <returns>Returns a GameObject represeting the OBJ file, with each imported object as a child.</returns>
         public GameObject Load(string path)
         {
-            return Load(path, null);
+            return Load(path, null,(float[,])null);
         }
     }
 }

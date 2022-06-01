@@ -41,7 +41,8 @@ public class MeshCreator: MonoBehaviour
 	private List<Vector3> GetVts(string name){
 		List<Vector3> vals = new List<Vector3>();
 		//should be locate by name...
-		float[] xyz = SceneImporter.data.mesh[SceneImporter.getMeshByUid(name)].xyz;
+		//TODO: Can be fix for old front
+		float[] xyz = null;//SceneImporter.data.mesh[SceneImporter.getMeshByUid(name)].xyz;
 		for (int i = 0; i < xyz.GetLength(0); i += 3)
 		{
 			vals.Add(new Vector3(xyz[i],xyz[i+1],xyz[i+2]));
@@ -61,7 +62,8 @@ public class MeshCreator: MonoBehaviour
 	private List<Vector3> GetNors(string name)
 	{
 		List<Vector3> vals = new List<Vector3>();
-		float[] nor = SceneImporter.data.mesh[SceneImporter.getMeshByUid(name)].normal;
+		//TODO: Can be fix for old front
+		float[] nor = null;//SceneImporter.data.mesh[SceneImporter.getMeshByUid(name)].normal;
 		for (int i = 0; i < nor.GetLength(0); i += 3)
 		{
 			vals.Add(new Vector3(nor[i],nor[i+1],nor[i+2]));
@@ -72,7 +74,8 @@ public class MeshCreator: MonoBehaviour
 	private List<Vector2> GetUV(string name)
 	{
 		List<Vector2> vals = new List<Vector2>();
-		float[] uv = SceneImporter.data.mesh[SceneImporter.getMeshByUid(name)].uv;
+		//TODO: Can be fix for old front
+		float[] uv = null;//SceneImporter.data.mesh[SceneImporter.getMeshByUid(name)].uv;
 		for (int i = 0; i < uv.GetLength(0); i += 2)
 		{
 			vals.Add(new Vector2(uv[i],uv[i+1]));
